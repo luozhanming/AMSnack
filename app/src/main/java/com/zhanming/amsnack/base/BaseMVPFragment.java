@@ -80,5 +80,7 @@ public abstract class BaseMVPFragment<T extends BasePresenter> extends Fragment 
         delegate.onSave(outState);
     }
 
+    public abstract T createPresenter();
+
 
 }

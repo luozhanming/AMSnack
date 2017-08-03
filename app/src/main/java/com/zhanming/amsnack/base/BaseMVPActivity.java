@@ -80,4 +80,6 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends AppCompat
         super.onRestoreInstanceState(savedInstanceState);
         delegate.onRestore(savedInstanceState);
     }
+
+    public abstract T createPresenter();
 }
