@@ -3,6 +3,7 @@ package com.zhanming.amsnack.base;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import butterknife.Unbinder;
  * Created by zhanming on 2017/7/31.
  */
 
-public abstract class BaseMVPFragment<T extends BasePresenter> extends Fragment implements IMVPView{
+public abstract class BaseMVPFragment<T extends BasePresenter> extends Fragment implements IMVPView {
 
     protected T mPresenter;
     protected Unbinder unbinder;
@@ -23,12 +24,12 @@ public abstract class BaseMVPFragment<T extends BasePresenter> extends Fragment 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(getLayoutID(),null);
+        return inflater.inflate(getLayoutID(), null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        unbinder = ButterKnife.bind(this,view);
+        unbinder = ButterKnife.bind(this, view);
         mPresenter = (T) createPresenter();
         if (mPresenter instanceof PresenterDelegate) {
             delegate = (PresenterDelegate) mPresenter;
@@ -42,6 +43,9 @@ public abstract class BaseMVPFragment<T extends BasePresenter> extends Fragment 
     public void onDestroy() {
         super.onDestroy();
         delegate.onDestroy();
+        unbinder.unbind();
+        mPresenter = null;
+        delegate = null;
     }
 
     @Override

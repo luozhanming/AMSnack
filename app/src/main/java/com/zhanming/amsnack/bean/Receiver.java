@@ -11,7 +11,6 @@ public class Receiver extends BmobObject {
     private String address;
     private String receiverName;
     private String phone;
-    private Boolean hasSettled;  //是否设置为默认地址
 
     public AppUser getUser() {
         return user;
@@ -45,11 +44,4 @@ public class Receiver extends BmobObject {
         this.phone = phone;
     }
 
-    public Boolean getHasSettled() {
-        return hasSettled;
-    }
-
-    public void setHasSettled(Boolean hasSettled) {
-        this.hasSettled = hasSettled;
-    }
 }

@@ -16,6 +16,7 @@ public class Good extends BmobObject {
     private String imgUrl;
     private String description;
     private Integer store;
+    private Integer sellCount;
     private Boolean isHot;
 
     public BmobRelation getLoader() {
@@ -80,5 +81,13 @@ public class Good extends BmobObject {
 
     public void setHot(Boolean hot) {
         isHot = hot;
+    }
+
+    public Integer getSellCount() {
+        return sellCount;
+    }
+
+    public void setSellCount(Integer sellCount) {
+        this.sellCount = sellCount;
     }
 }

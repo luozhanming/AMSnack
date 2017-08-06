@@ -30,13 +30,18 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends AppCompat
         } else {
             throw new IllegalArgumentException("Presenter must extends PresenterDelegate");
         }
+        preCreate(savedInstanceState);
         delegate.onCreate(savedInstanceState);
+        postCreate(savedInstanceState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         delegate.onDestroy();
+        unbinder.unbind();
+        mPresenter = null;
+        delegate = null;
     }
 
     @Override
@@ -82,4 +87,12 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends AppCompat
     }
 
     public abstract T createPresenter();
+
+    public void preCreate(@Nullable Bundle savedInstance){
+
+    }
+
+    public void postCreate(@Nullable Bundle saveInstance){
+
+    }
 }

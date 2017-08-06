@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context="com.zhanming.amsnack.ui.LoginActivity">
+
+    <EditText
+        style="@style/style_editText"
+        android:hint="请输入用户名"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_login_username" />
+
+    <View style="@style/style_line" />
+
+    <EditText
+        android:id="@+id/et_login_password"
+        style="@style/style_editText"
+        android:hint="请输入密码"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View style="@style/style_line" />
+
+    <Button
+        android:id="@+id/btn_login_submit"
+        android:layout_width="match_parent"
+        android:textSize="@dimen/text_size3"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_btn1"
+        android:textColor="#FFFFFF"
+        android:text="登录"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_login_signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注册新用户"
+        android:textSize="@dimen/text_size6"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

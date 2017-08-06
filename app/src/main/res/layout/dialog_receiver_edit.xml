@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/et_dialog_receiverName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="收货人姓名" />
+
+    <EditText
+        android:id="@+id/et_dialog_receiver_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:layout_marginTop="10dp"
+        android:hint="收货人电话" />
+
+    <EditText
+        android:id="@+id/et_dialog_receiver_address"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="收货人地址" />
+
+</LinearLayout>

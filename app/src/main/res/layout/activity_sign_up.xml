@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:text="注册"
+        android:textColor="#FFFFFF"
         android:background="@drawable/bg_btn1"
         android:textSize="@dimen/text_size3"
         android:id="@+id/btn_signUp_submit" />

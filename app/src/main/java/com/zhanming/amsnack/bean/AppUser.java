@@ -56,4 +56,12 @@ public class AppUser extends BmobUser {
     public void setImg(BmobFile img) {
         this.img = img;
     }
+
+    public Integer getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
 }
