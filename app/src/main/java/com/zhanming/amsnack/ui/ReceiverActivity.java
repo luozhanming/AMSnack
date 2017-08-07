@@ -1,10 +1,12 @@
 package com.zhanming.amsnack.ui;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.zhanming.amsnack.R;
@@ -51,7 +53,12 @@ public class ReceiverActivity extends BaseMVPActivity<ReceiverContract.Presenter
     @Override
     public void preCreate(@Nullable Bundle savedInstance) {
         initRecycler();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        tv_addAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.addAdress();
+            }
+        });
     }
 
     @Override
@@ -66,6 +73,7 @@ public class ReceiverActivity extends BaseMVPActivity<ReceiverContract.Presenter
     private void initRecycler() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mAdapter = new ReceiverAdapter(this);
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(10));
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -82,5 +90,23 @@ public class ReceiverActivity extends BaseMVPActivity<ReceiverContract.Presenter
     @Override
     public void hideLoading() {
 
+    }
+
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private int space;
+
+        public SpacesItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+            outRect.bottom = space;
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildPosition(view) == 0)
+                outRect.top = space;
+        }
     }
 }

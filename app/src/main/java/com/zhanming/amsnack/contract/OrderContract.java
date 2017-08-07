@@ -4,14 +4,15 @@ import com.zhanming.amsnack.base.BasePresenter;
 import com.zhanming.amsnack.base.BaseView;
 
 /**
- * Created by zhanming on 2017/8/3.
+ * Created by zhanming on 2017/8/7.
  */
 
-public interface MainContract {
-    interface View extends BaseView {
+public interface OrderContract {
+    interface View extends BaseView{
+
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter{
 
     }
 }

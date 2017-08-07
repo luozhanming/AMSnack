@@ -191,7 +191,7 @@ public class MineFragment extends BaseMVPFragment<MineContract.Presenter> implem
 
     @Override
     public void jump2ReceiverDetail() {
-        Intent intent = new Intent(getActivity(), Receiver.class);
+        Intent intent = new Intent(getActivity(), ReceiverActivity.class);
         startActivity(intent);
     }
 }

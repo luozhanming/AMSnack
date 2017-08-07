@@ -73,10 +73,7 @@ public class GoodAdapter extends RecyclerView.Adapter<GoodAdapter.VH> {
         Picasso.with(mContext).load(good.getImgUrl()).transform(new RoundTransform()).into(holder.iv_img);
         //设置喜欢CheckBox
          setLoveCheckBox(good, holder);
-        BmobRelation likes = good.getLikes();
-        List<BmobPointer> objects = likes.getObjects();
-        holder.tv_goodLike.setText("共"+objects.size()+"人喜欢");
-        //        setGoodLoverCount(good, holder);
+       //        setGoodLoverCount(good, holder);
         final Action1 emptyAction = new Action1<Void>() {
             @Override
             public void call(Void aVoid) {

@@ -12,6 +12,7 @@ public class Order extends BmobObject {
     private AppUser orderOwner;
     private Boolean hasHandle;
     private Float totalPrice;
+    private Receiver receiver;
 
     public ShoppingCar getShoppingCar() {
         return shoppingCar;
@@ -44,5 +45,13 @@ public class Order extends BmobObject {
 
     public void setTotalPrice(Float totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Receiver getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(Receiver receiver) {
+        this.receiver = receiver;
     }
 }

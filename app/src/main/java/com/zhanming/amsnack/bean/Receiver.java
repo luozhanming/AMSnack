@@ -11,6 +11,7 @@ public class Receiver extends BmobObject {
     private String address;
     private String receiverName;
     private String phone;
+    private boolean defaultAddress;
 
     public AppUser getUser() {
         return user;
@@ -44,4 +45,11 @@ public class Receiver extends BmobObject {
         this.phone = phone;
     }
 
+    public boolean isDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(boolean defaultAddress) {
+        this.defaultAddress = defaultAddress;
+    }
 }

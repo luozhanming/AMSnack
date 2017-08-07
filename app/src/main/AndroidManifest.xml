@@ -34,8 +34,7 @@
         <activity
             android:name=".ui.ReceiverActivity"
             android:screenOrientation="portrait"
-            android:label="我的收货地址"
-            android:theme="@style/AppTheme.NoTitle" />
+            android:label="我的收货地址" />
     </application>
 
 </manifest>

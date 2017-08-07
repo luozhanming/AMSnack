@@ -135,7 +135,15 @@ public class GoodComfrimDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_dialog_good_comfirm:
-                ShoppingBussiness.addGoodToShoppingCar(good,quantity);
+                ShoppingBussiness.addGoodToShoppingCar(good,quantity)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                                dismiss();
+                            }
+                        });
                 break;
         }
     }

@@ -1,6 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="3dp"
+    android:elevation="5dp"
+    app:cardBackgroundColor="#e4de8c"
+    android:layout_height="wrap_content">
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="订单编号："
+            android:textSize="@dimen/text_size5"
+            android:id="@+id/tv_order_number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size5"
+            android:text="下单时间:"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv_order_number"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/tv_order_time" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size4"
+            android:text="订单总价"
+            android:id="@+id/tv_order_totalPrice" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size5"
+            android:text="收货人姓名:"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv_order_time"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/tv_order_receiverName" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size5"
+            android:text="收货人电话:"
+            android:layout_alignBaseline="@+id/tv_order_receiverName"
+            android:layout_alignBottom="@+id/tv_order_receiverName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/tv_order_phone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size5"
+            android:text="收货人地址:"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv_order_receiverName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/tv_order_address" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

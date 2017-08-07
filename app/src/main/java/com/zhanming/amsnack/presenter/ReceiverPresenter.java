@@ -10,8 +10,11 @@ import android.widget.EditText;
 
 import com.zhanming.amsnack.R;
 import com.zhanming.amsnack.base.PresenterDelegate;
+import com.zhanming.amsnack.bean.Receiver;
 import com.zhanming.amsnack.bussiness.ShoppingBussiness;
 import com.zhanming.amsnack.contract.ReceiverContract;
+
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -29,7 +32,23 @@ public class ReceiverPresenter extends PresenterDelegate<ReceiverContract.View> 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        mView.showLoading();
+        queryReceivers();
 
+    }
+
+
+    private void queryReceivers() {
+        ShoppingBussiness.queryAllReceiver()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Receiver>>() {
+                    @Override
+                    public void call(List<Receiver> receivers) {
+                        mView.setReceivers(receivers);
+                        mView.hideLoading();
+                    }
+                });
     }
 
     @Override
@@ -48,6 +67,15 @@ public class ReceiverPresenter extends PresenterDelegate<ReceiverContract.View> 
                         final String name = et_name.getText().toString();
                         final String phone = et_phone.getText().toString();
                         final String address = et_address.getText().toString();
+                        ShoppingBussiness.addReceiver(name, address, phone)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Action1<String>() {
+                                    @Override
+                                    public void call(String s) {
+                                        queryReceivers();
+                                    }
+                                });
 
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {

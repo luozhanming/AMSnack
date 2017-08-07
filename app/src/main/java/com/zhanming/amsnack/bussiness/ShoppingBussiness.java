@@ -2,17 +2,16 @@ package com.zhanming.amsnack.bussiness;
 
 import android.util.Log;
 
+import com.zhanming.amsnack.MyApp;
 import com.zhanming.amsnack.bean.AppUser;
+import com.zhanming.amsnack.bean.CarGoodCount;
 import com.zhanming.amsnack.bean.Good;
 import com.zhanming.amsnack.bean.Order;
 import com.zhanming.amsnack.bean.Receiver;
 import com.zhanming.amsnack.bean.ShoppingCar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -23,6 +22,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by zhanming on 2017/8/3.
@@ -47,49 +47,177 @@ public class ShoppingBussiness {
     /**
      * 将货物添加到购物车
      */
-    public static void addGoodToShoppingCar(Good good,int quantity){
-        ShoppingCarCache.putGoodToCar(good,quantity);
+    public static Observable<String> addGoodToShoppingCar(Good good, int quantity) {
+        ShoppingCar localCar = ShoppingCarCache.getLocalCar();
+        CarGoodCount counter = new CarGoodCount();
+        counter.setCar(localCar);
+        counter.setGood(good);
+        counter.setCount(quantity);
+        counter.setTotalPrice(quantity * good.getPrice());
+        return counter.saveObservable();
+    }
+
+    /**
+     * 查询购物车商品
+     */
+    public static Observable<List<CarGoodCount>> queryCarGoodCounter(ShoppingCar car) {
+        BmobQuery<CarGoodCount> query = new BmobQuery<>();
+        query.addWhereEqualTo("car", car);
+        query.include("good");
+        return query.findObjectsObservable(CarGoodCount.class);
+    }
+
+    /**
+     * 更新购物车商品shuliang
+     */
+    public static void updateCarGoodCounter(CarGoodCount counter, int quantity) {
+        counter.setCount(quantity);
+        counter.setTotalPrice(counter.getGood().getPrice() * quantity);
+        counter.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    Log.d(TAG, "更新成功");
+                }
+            }
+        });
+    }
+
+    public static void commitShoppingCar(){
+        ShoppingCar localCar = ShoppingCarCache.getLocalCar();
+        localCar.setCommit(true);
+        localCar.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    Log.d(TAG, "提交成功");
+                }
+            }
+        });
+    }
+
+    /**
+     * 清空购物车
+     */
+    public static Observable<Boolean> clearShoppingCar(ShoppingCar car) {
+        BmobQuery<CarGoodCount> query = new BmobQuery<>();
+        query.addWhereEqualTo("car", car);
+        return query.findObjectsObservable(CarGoodCount.class)
+                .flatMap(new Func1<List<CarGoodCount>, Observable<CarGoodCount>>() {
+                    @Override
+                    public Observable<CarGoodCount> call(List<CarGoodCount> carGoodCounts) {
+                        return Observable.from(carGoodCounts);
+                    }
+                })
+                .map(new Func1<CarGoodCount, Boolean>() {
+                    @Override
+                    public Boolean call(CarGoodCount carGoodCount) {
+                        carGoodCount.delete(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.d(TAG, "清理成功");
+                                }
+                            }
+                        });
+                        return true;
+                    }
+                });
+    }
+
+    /**
+     * 添加空购物车
+     */
+    public static Observable<ShoppingCar> addEmptyShoppingCar() {
+        ShoppingCar car = new ShoppingCar();
+        car.setUser(BmobUser.getCurrentUser(AppUser.class));
+        car.setCommit(false);
+        return car.saveObservable().flatMap(new Func1<String, Observable<ShoppingCar>>() {
+            @Override
+            public Observable<ShoppingCar> call(String s) {
+                BmobQuery<ShoppingCar> query = new BmobQuery<ShoppingCar>();
+                return query.getObjectObservable(ShoppingCar.class, s);
+            }
+        });
+    }
+
+    public static Observable<List<ShoppingCar>> queryShoppingCar() {
+        BmobQuery<ShoppingCar> query = new BmobQuery<>();
+        query.addWhereEqualTo("user", BmobUser.getCurrentUser(AppUser.class));
+        query.addWhereEqualTo("isCommit", false);
+        return query.findObjectsObservable(ShoppingCar.class);
     }
 
 
-    /**
-     * 生成订单
-     */
-    public static Observable<String> generateOrder(ShoppingCar car) {
-        Order order = new Order();
-        order.setShoppingCar(car);
+    public static Observable<Order> generateOrder(ShoppingCar car) {
+        final Order order = new Order();
         order.setHasHandle(false);
+        order.setShoppingCar(car);
         order.setOrderOwner(BmobUser.getCurrentUser(AppUser.class));
-        Map<Good, Integer> count = car.getCount();
-        Set<Map.Entry<Good, Integer>> entries = count.entrySet();
-        float totalPrice = 0;
-        for (Map.Entry<Good, Integer> entry : entries) {
-            int quantity = entry.getValue();
-            Good good =  entry.getKey();
-            totalPrice += quantity * good.getPrice();
-            good.increment("store",-quantity);
-            good.increment("sellCount",quantity);
-            good.update(new UpdateListener() {
-                @Override
-                public void done(BmobException e) {
-                    if(e==null){
-                        Log.d(TAG, "商品购买了");
-                    }
+        order.setReceiver(MyApp.receiver);
+        order.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    Log.d(TAG, "订单暂时保存成功");
                 }
-            });
-        }
-        order.setTotalPrice(totalPrice);
-        Observable<String> observable = order.saveObservable();
-        return observable;
+            }
+        });
+        BmobQuery<CarGoodCount> query = new BmobQuery<>();
+        query.addWhereEqualTo("car", car);
+        query.addWhereNotEqualTo("count", 0);
+        query.include("good");
+        return query.findObjectsObservable(CarGoodCount.class)
+                .flatMap(new Func1<List<CarGoodCount>, Observable<Order>>() {
+                    @Override
+                    public Observable<Order> call(List<CarGoodCount> carGoodCounts) {
+                        float totalPrice = 0;
+                        for (CarGoodCount counter : carGoodCounts) {
+                            totalPrice += counter.getTotalPrice();
+                            counter.setOrder(order);
+                            counter.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        Log.d(TAG, "更新成功");
+                                    }
+                                }
+                            });
+                            //更新商品库存
+                            Good good = counter.getGood();
+                            int oldStore = good.getStore();
+                            int oldSold = good.getSellCount();
+                            good.setStore(oldStore - counter.getCount());
+                            good.setSellCount(oldSold + counter.getCount());
+                            good.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    Log.d(TAG, "更新商品信息成功");
+                                }
+                            });
+                        }
+                        order.setTotalPrice(totalPrice);
+                        order.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if(e==null){
+                                    Log.d(TAG, "更新成功");
+                                }
+                            }
+                        });
+                        return Observable.just(order);
+                    }
+                });
+
     }
 
     /**
      * 查询商家未处理订单
      */
-    public static Observable<List<Order>> queryUnhandleOrder(boolean hasHandle) {
-        final List<Order> orders = new ArrayList<>();
+    public static Observable<List<Order>> queryOrder(boolean hasHandle) {
         BmobQuery<Order> query = new BmobQuery();
         query.addWhereEqualTo("hasHandle", hasHandle);
+        query.include("receiver");
         return query.findObjectsObservable(Order.class);
     }
 
@@ -107,7 +235,7 @@ public class ShoppingBussiness {
         Receiver receiver = new Receiver();
         receiver.setUser(BmobUser.getCurrentUser(AppUser.class));
         receiver.setAddress(address);
-     //   receiver.setHasSettled(false);
+        //   receiver.setHasSettled(false);
         receiver.setReceiverName(receiverName);
         receiver.setPhone(phone);
         return receiver.saveObservable();
@@ -134,13 +262,13 @@ public class ShoppingBussiness {
             public void done(List<Receiver> list, BmobException e) {
                 if (e == null) {
                     for (Receiver receiver1 : list) {
-                      //  receiver1.setHasSettled(false);
+                        receiver1.setDefaultAddress(false);
                         receiver1.update(updateListener);
                     }
                 }
             }
         });
-       // receiver.setHasSettled(true);
+        receiver.setDefaultAddress(true);
         return receiver.updateObservable();
     }
 

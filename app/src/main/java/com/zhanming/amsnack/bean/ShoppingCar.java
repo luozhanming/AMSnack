@@ -13,7 +13,8 @@ import cn.bmob.v3.datatype.BmobRelation;
 public class ShoppingCar extends BmobObject {
 
     private Boolean isCommit = false;   //是否生成订单
-    private Map<Good,Integer> count = new HashMap<>();
+    private AppUser user;
+    private Order order;
 
 
     public Boolean getCommit() {
@@ -25,11 +26,20 @@ public class ShoppingCar extends BmobObject {
     }
 
 
-    public Map<Good, Integer> getCount() {
-        return count;
+
+    public AppUser getUser() {
+        return user;
     }
 
-    public void setCount(Map<Good, Integer> count) {
-        this.count = count;
+    public void setUser(AppUser user) {
+        this.user = user;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

@@ -26,8 +26,10 @@ public class MainActivity extends BaseMVPActivity<MainContract.Presenter> implem
 
     private GoodsFragment mGoodsFragment;
     private MineFragment mMineFragment;
+    private ShoppingCarFragment mShoppingCarFragment;
+    private OrderFragment mOrderFragment;
 
-    private TextBadgeItem shoppingCarBadgeItem;
+    //   private TextBadgeItem shoppingCarBadgeItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MainActivity extends BaseMVPActivity<MainContract.Presenter> implem
     private void initFragment() {
         mGoodsFragment = new GoodsFragment();
         mMineFragment = new MineFragment();
+        mShoppingCarFragment = new ShoppingCarFragment();
+        mOrderFragment = new OrderFragment();
     }
 
     @Override
@@ -49,13 +53,13 @@ public class MainActivity extends BaseMVPActivity<MainContract.Presenter> implem
 
 
     private void initBnb() {
-        shoppingCarBadgeItem = new TextBadgeItem();
-        shoppingCarBadgeItem.setHideOnSelect(true)
-                .setBackgroundColor(Color.RED)
-                .setGravity(Gravity.TOP | Gravity.RIGHT);
-        changeBadgeItemNumber(0);
+//        shoppingCarBadgeItem = new TextBadgeItem();
+//        shoppingCarBadgeItem.setHideOnSelect(true)
+//                .setBackgroundColor(Color.RED)
+//                .setGravity(Gravity.TOP | Gravity.RIGHT);
+//        changeBadgeItemNumber(0);
         mBottomNavigationBar.addItem(new BottomNavigationItem(R.mipmap.goods, "商品"))
-                .addItem(new BottomNavigationItem(R.mipmap.shoppingcar, "购物车").setBadgeItem(shoppingCarBadgeItem))
+                .addItem(new BottomNavigationItem(R.mipmap.shoppingcar, "购物车"))
                 .addItem(new BottomNavigationItem(R.mipmap.orders, "订单"))
                 .addItem(new BottomNavigationItem(R.mipmap.mine, "我的"))
                 .initialise();
@@ -90,10 +94,10 @@ public class MainActivity extends BaseMVPActivity<MainContract.Presenter> implem
                 getFragmentManager().beginTransaction().replace(R.id.container, mGoodsFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
                 break;
             case 1:
-
+                getFragmentManager().beginTransaction().replace(R.id.container, mShoppingCarFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
                 break;
             case 2:
-
+                getFragmentManager().beginTransaction().replace(R.id.container, mOrderFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
                 break;
             case 3:
                 getFragmentManager().beginTransaction().replace(R.id.container, mMineFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
@@ -110,25 +114,24 @@ public class MainActivity extends BaseMVPActivity<MainContract.Presenter> implem
     public void onTabReselected(int position) {
 
     }
-
-    @Override
-    public void changeBadgeItemNumber(int num) {
-        if (num == 0) {
-            shoppingCarBadgeItem.hide();
-        } else {
-            shoppingCarBadgeItem.setText(String.valueOf(num));
-        }
-    }
-
-    @Override
-    public void toggleBadgeItem(boolean isHide) {
-        if (isHide) {
-            shoppingCarBadgeItem.hide();
-        } else {
-            shoppingCarBadgeItem.show();
-        }
-    }
-
+//
+//    @Override
+//    public void changeBadgeItemNumber(int num) {
+//        if (num == 0) {
+//            shoppingCarBadgeItem.hide();
+//        } else {
+//            shoppingCarBadgeItem.setText(String.valueOf(num));
+//        }
+//    }
+//
+//    @Override
+//    public void toggleBadgeItem(boolean isHide) {
+//        if (isHide) {
+//            shoppingCarBadgeItem.hide();
+//        } else {
+//            shoppingCarBadgeItem.show();
+//        }
+//    }
 
 
 }

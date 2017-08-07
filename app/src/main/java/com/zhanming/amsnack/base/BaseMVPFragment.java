@@ -36,7 +36,17 @@ public abstract class BaseMVPFragment<T extends BasePresenter> extends Fragment 
         } else {
             throw new IllegalArgumentException("Presenter must extends PresenterDelegate");
         }
+        preCreate(savedInstanceState);
         delegate.onCreate(savedInstanceState);
+        postCreate(savedInstanceState);
+    }
+
+    public void preCreate(Bundle savedInstanceState) {
+    }
+
+
+    public void postCreate(Bundle savedInstanceState) {
+
     }
 
     @Override

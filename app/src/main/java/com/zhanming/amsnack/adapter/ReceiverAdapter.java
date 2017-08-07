@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zhanming.amsnack.MyApp;
 import com.zhanming.amsnack.R;
 import com.zhanming.amsnack.bean.Receiver;
 import com.zhanming.amsnack.bussiness.ShoppingBussiness;
@@ -35,7 +38,7 @@ public class ReceiverAdapter extends RecyclerView.Adapter<ReceiverAdapter.VH> {
 
 
     public ReceiverAdapter(Context ctx) {
-
+        this.mContext = ctx;
     }
 
     public void setReceivers(List<Receiver> datas) {
@@ -125,7 +128,13 @@ public class ReceiverAdapter extends RecyclerView.Adapter<ReceiverAdapter.VH> {
                         }).show();
             }
         });
-
+        holder.tv_setDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApp.receiver = receiver;
+                Toast.makeText(mContext,"此地址设为默认",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -140,8 +149,6 @@ public class ReceiverAdapter extends RecyclerView.Adapter<ReceiverAdapter.VH> {
 
     class VH extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.cb_receiver_setDefault)
-        CheckBox cb_setDefault;
         @BindView(R.id.tv_receiver_address)
         TextView tv_address;
         @BindView(R.id.tv_receiver_delete)
@@ -152,6 +159,8 @@ public class ReceiverAdapter extends RecyclerView.Adapter<ReceiverAdapter.VH> {
         TextView tv_phone;
         @BindView(R.id.tv_receiver_name)
         TextView tv_name;
+        @BindView(R.id.tv_receiver_setDefault)
+        TextView tv_setDefault;
 
         public VH(View itemView) {
             super(itemView);
