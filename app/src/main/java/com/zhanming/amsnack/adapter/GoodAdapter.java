@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 import rx.Observable;
@@ -60,20 +61,20 @@ public class GoodAdapter extends RecyclerView.Adapter<GoodAdapter.VH> {
         final Good good = goods.get(position);
         holder.tv_name.setText("\u3000\u3000" + good.getName());
         holder.tv_description.setText(good.getDescription());
-        holder.tv_price.setText("¥"+good.getPrice() + "");
+        holder.tv_price.setText("¥" + good.getPrice() + "");
         holder.tv_sellCount.setText("共售" + good.getSellCount() + "件");
         holder.tv_store.setText("还剩" + good.getStore() + "件");
         holder.iv_addCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GoodComfrimDialog dialog = new GoodComfrimDialog(mContext,good);
+                GoodComfrimDialog dialog = new GoodComfrimDialog(mContext, good);
                 dialog.show();
             }
         });
         Picasso.with(mContext).load(good.getImgUrl()).transform(new RoundTransform()).into(holder.iv_img);
         //设置喜欢CheckBox
-         setLoveCheckBox(good, holder);
-       //        setGoodLoverCount(good, holder);
+        setLoveCheckBox(good, holder);
+        //        setGoodLoverCount(good, holder);
         final Action1 emptyAction = new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
@@ -112,35 +113,61 @@ public class GoodAdapter extends RecyclerView.Adapter<GoodAdapter.VH> {
     }
 
     private void setLoveCheckBox(final Good good, final VH holder) {
-        ShoppingBussiness.queryLoveGoods()
+        ShoppingBussiness.queryLoveGoodUser(good)
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<List<Good>, List<String>>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<List<AppUser>, Observable<AppUser>>() {
                     @Override
-                    public List<String> call(List<Good> goods) {
-                        List<String> objectIds = new ArrayList<>();
-                        for (Good good : goods) {
-                            objectIds.add(good.getObjectId());
-                        }
-                        return objectIds;
+                    public Observable<AppUser> call(List<AppUser> appUsers) {
+                        holder.tv_goodLike.setText("共"+appUsers.size()+"人喜欢");
+                        return Observable.from(appUsers);
                     }
                 })
-                .flatMap(new Func1<List<String>, Observable<String>>() {
+                .observeOn(Schedulers.newThread())
+                .filter(new Func1<AppUser, Boolean>() {
                     @Override
-                    public Observable<String> call(List<String> strings) {
-                        return Observable.from(strings);
+                    public Boolean call(AppUser appUser) {
+                        return appUser.getObjectId().equals(BmobUser.getCurrentUser(AppUser.class).getObjectId());
                     }
-                }).filter(new Func1<String, Boolean>() {
-            @Override
-            public Boolean call(String s) {
-                return s.equals(good.getObjectId());
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<AppUser>() {
                     @Override
-                    public void call(String s) {
+                    public void call(AppUser appUser) {
                         holder.cb_love.setChecked(true);
                     }
                 });
+
+
+//        ShoppingBussiness.queryLoveGoods()
+//                .map(new Func1<List<Good>, List<String>>() {
+//                    @Override
+//                    public List<String> call(List<Good> goods) {
+//                        List<String> objectIds = new ArrayList<>();
+//                        for (Good good : goods) {
+//                            objectIds.add(good.getObjectId());
+//                        }
+//                        return objectIds;
+//                    }
+//                })
+//                .flatMap(new Func1<List<String>, Observable<String>>() {
+//                    @Override
+//                    public Observable<String> call(List<String> strings) {
+//                        return Observable.from(strings);
+//                    }
+//                }).filter(new Func1<String, Boolean>() {
+//            @Override
+//            public Boolean call(String s) {
+//                return s.equals(good.getObjectId());
+//            }
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<String>() {
+//                    @Override
+//                    public void call(String s) {
+//                        holder.cb_love.setChecked(true);
+//                    }
+//                });
     }
 
     @Override

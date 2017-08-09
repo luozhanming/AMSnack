@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -38,6 +39,7 @@ public class OrderItemFragment extends Fragment {
 
     private int type;
     private OrderAdapter mAdapter;
+    private Unbinder unbinder;
 
     public OrderItemFragment() {
     }
@@ -51,7 +53,7 @@ public class OrderItemFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this,view);
+        unbinder = ButterKnife.bind(this,view);
         Bundle arguments = getArguments();
         type = (int) arguments.get("type");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
@@ -59,6 +61,14 @@ public class OrderItemFragment extends Fragment {
         mAdapter = new OrderAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);
         setDatas();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+        mAdapter = null;
+
     }
 
     private void setDatas() {

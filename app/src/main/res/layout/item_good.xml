@@ -48,7 +48,7 @@
             android:layout_below="@+id/tv_good_name"
             android:layout_marginTop="5dp"
             android:maxLines="2"
-            android:text="商品描述"
+          
             android:textSize="@dimen/text_size6" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_alignLeft="@+id/tv_good_description"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="还剩下5件"
+
             android:textSize="@dimen/text_size7" />
 
         <TextView
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/iv_good_img"
             android:layout_alignLeft="@+id/tv_good_store"
-            android:text="39.8"
+
             android:textColor="#fd7c37"
             android:textSize="@dimen/text_size1" />
 
@@ -88,7 +88,7 @@
             android:layout_alignBaseline="@id/tv_good_price"
             android:layout_marginLeft="24dp"
             android:layout_toRightOf="@id/tv_good_price"
-            android:text="3.9万人购买过"
+
             android:textSize="@dimen/text_size5" />
 
         <ImageView
@@ -117,7 +117,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/tv_good_store"
-            android:text="共5人喜欢"
+
             android:textSize="@dimen/text_size6" />
     </RelativeLayout>
 

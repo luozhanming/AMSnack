@@ -13,6 +13,7 @@ import com.zhanming.amsnack.bean.ShoppingCar;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
@@ -216,6 +217,7 @@ public class ShoppingBussiness {
      */
     public static Observable<List<Order>> queryOrder(boolean hasHandle) {
         BmobQuery<Order> query = new BmobQuery();
+        query.addWhereEqualTo("orderOwner",BmobUser.getCurrentUser(AppUser.class));
         query.addWhereEqualTo("hasHandle", hasHandle);
         query.include("receiver");
         return query.findObjectsObservable(Order.class);
@@ -315,6 +317,8 @@ public class ShoppingBussiness {
         query.addWhereEqualTo("likes", new BmobPointer(good));
         return query.findObjectsObservable(AppUser.class);
     }
+
+
 
     /**
      * 添加喜欢商品
